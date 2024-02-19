@@ -10,17 +10,20 @@ public class Main {
         String num = scan.nextLine();
         String x = num.replaceAll(" ", "");
         String[] oper = x.split("[+\\-*/]");
+
+        // Делаем исключения на длинну
         if (oper.length < 2) {
             throw new IllegalStateException(num + " Не является математическием выражение;");
         } else if (oper.length > 2) {
             throw new IllegalStateException(num + " Формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *);");
         }
 
+        // Делаем массив от 1 до 999
         String[] keys = new String[999];
         for (int i = 0; i < keys.length; i++) {
             keys[i] = String.valueOf(i + 1);
         }
-
+        // Массив римских чисел
         String[] RomanResult = {"O", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
                 "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
                 "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII", "XLIX", "L", "LI", "LII", "LIII", "LIV", "LV", "LVI", "LVII", "LVIII", "LIX", "LX",
@@ -32,6 +35,7 @@ public class Main {
         boolean keynumbers = false;
         boolean keynumbers2 = false;
 
+        // Проверяем на какое число из масива похоже
         if (indexOf(keys, oper[0]) != -1) {
             keynumbers = true;
         }
@@ -40,6 +44,7 @@ public class Main {
             keynumbers2 = true;
         }
 
+        // Решаем с какими числами мы работаем на данный момент, исключени 1 + I
         if (keynumbers && keynumbers2) {
             Calculator calc = new Calculator();
             // Передаём данные "num" в метод "calc"
@@ -56,7 +61,7 @@ public class Main {
 
 
     }
-
+    // Перебор цифр
     public static int indexOf(String[] keys, String s) {
         for (int i = 0; i < keys.length; i++) {
             if (keys[i].equals(s)) {
