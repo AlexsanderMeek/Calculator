@@ -5,21 +5,70 @@ public class Main {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         System.out.println("Добро пожаловать в калькулятор!");
-        System.out.print("Введите выражение (Например: a + b, a - b, и т.д.): " );
+        System.out.print("Введите выражение (Например: a + b, a - b, и т.д.): ");
         // Получаем выражение от пользователя и передаём в переменную "num"
         String num = scan.nextLine();
-        Calculator calc = new Calculator();
-        // Передаём данные "num" в метод "calc"
-        calc.calc(num);
-        CalculatorRom calcRom = new CalculatorRom();
-        // Передаём данные "num" в метод "calcRom"
-        calcRom.calcRom(num);
+        String x = num.replaceAll(" ", "");
+        String[] oper = x.split("[+\\-*/]");
+        if (oper.length < 2) {
+            throw new IllegalStateException(num + " Не является математическием выражение;");
+        } else if (oper.length > 2) {
+            throw new IllegalStateException(num + " Формат математической операции не удовлетворяет заданию - два операнда и один оператор (+, -, /, *);");
+        }
+
+        String[] keys = new String[999];
+        for (int i = 0; i < keys.length; i++) {
+            keys[i] = String.valueOf(i + 1);
+        }
+
+        String[] RomanResult = {"O", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
+                "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
+                "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII", "XLIX", "L", "LI", "LII", "LIII", "LIV", "LV", "LVI", "LVII", "LVIII", "LIX", "LX",
+                "LXI", "LXII", "LXIII", "LXIV", "LXV", "LXVI", "LXVII", "LXVIII", "LXIX", "LXX",
+                "LXXI", "LXXII", "LXXIII", "LXXIV", "LXXV", "LXXVI", "LXXVII", "LXXVIII", "LXXIX", "LXXX",
+                "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII", "LXXXVIII", "LXXXIX", "XC",
+                "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"};
+
+        boolean keynumbers = false;
+        boolean keynumbers2 = false;
+
+        if (indexOf(keys, oper[0]) != -1) {
+            keynumbers = true;
+        }
+
+        if (indexOf(keys, oper[1]) != -1) {
+            keynumbers2 = true;
+        }
+
+        if (keynumbers && keynumbers2) {
+            Calculator calc = new Calculator();
+            // Передаём данные "num" в метод "calc"
+            calc.calc(num);
+        } else if (!keynumbers && keynumbers2) {
+            throw new IllegalStateException("Используется неизвестный символ/Используются одновременно разные системы счисления;");
+        } else if (keynumbers && !keynumbers2) {
+            throw new IllegalStateException("Используется неизвестный символ/Используются одновременно разные системы счисления;");
+        } else if (!keynumbers && !keynumbers2) {
+            CalculatorRom calcRom = new CalculatorRom();
+            // Передаём данные "num" в метод "calcRom"
+            calcRom.calcRom(num);
+        }
+
+
+    }
+
+    public static int indexOf(String[] keys, String s) {
+        for (int i = 0; i < keys.length; i++) {
+            if (keys[i].equals(s)) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
 
-
-class Calculator{
-    public static String calc(String input){
+class Calculator {
+    public static String calc(String input) {
         int a = 0;
         int b = 0;
         int result = 0;
@@ -65,6 +114,8 @@ class Calculator{
             case "10":
                 a = 10;
                 break;
+            default:
+                throw new IllegalStateException("Число " + nums[0] + " > 10; Калькулятор не предусмотрен для данных чисел.");
         }
 
         switch (nums[1]) {
@@ -98,31 +149,29 @@ class Calculator{
             case "10":
                 b = 10;
                 break;
+            default:
+                throw new IllegalStateException("Число " + nums[1] + " > 10; Калькулятор не предусмотрен для данных чисел.");
         }
 
         // Проверяет выражение на арефметический знак и выполняет действие(сложение,умножение и тп)
-        if(a != 0 || b != 0) {
+        if (a != 0 || b != 0) {
 
             switch (number) {
                 case "+":
                     result = a + b;
                     System.out.println(a + "+" + b + "=" + result);
-                    System. exit(0);
                     break;
                 case "-":
                     result = a - b;
                     System.out.println(a + "-" + b + "=" + result);
-                    System. exit(0);
                     break;
                 case "*":
                     result = a * b;
                     System.out.println(a + "*" + b + "=" + result);
-                    System. exit(0);
                     break;
                 case "/":
                     result = a / b;
                     System.out.println(a + "/" + b + "=" + result);
-                    System. exit(0);
                     break;
                 default:
                     throw new IllegalStateException("Неизвестный/Неправильный арефметический знак: " + nums[1]);
@@ -134,12 +183,12 @@ class Calculator{
         return s;
     }
 }
-class CalculatorRom{
+
+class CalculatorRom {
     public static String calcRom(String input) {
         int a = 0;
         int b = 0;
         int result = 0;
-
 
 
         String x = input.replaceAll(" ", "");
@@ -182,6 +231,8 @@ class CalculatorRom{
             case "X":
                 a = 10;
                 break;
+            default:
+                throw new IllegalStateException("Число " + nums[0] + " > X; Калькулятор не предусмотрен для данных чисел.");
         }
 
 
@@ -216,9 +267,9 @@ class CalculatorRom{
             case "X":
                 b = 10;
                 break;
-
+            default:
+                throw new IllegalStateException("Число " + nums[1] + " > X; Калькулятор не предусмотрен для данных чисел.");
         }
-
 
 
         switch (number) {
@@ -227,17 +278,29 @@ class CalculatorRom{
                 break;
             case "-":
                 result = a - b;
+                if(result == 0){
+                    throw new IllegalStateException("В римских системе нету нуля;");
+                }
+                else if (result < 0 ) {
+                    throw new IllegalStateException("В римской системе нет отрицательных чисел;");
+                }
                 break;
             case "*":
-               result = a * b;
-               break;
+                result = a * b;
+                break;
             case "/":
                 result = a / b;
+                if(result == 0){
+                    throw new IllegalStateException("Это выражение невозможно выполнить в римской системе;");
+                }
+                else if (result < 0 ) {
+                    throw new IllegalStateException("Это выражение невозможно выполнить в римской системе;");
+                }
                 break;
             default:
                 throw new IllegalStateException("Неизвестный/Неправильный арефметический знак: " + number);
         }
-        String result1 = (nums[0]+number+nums[1]+"=");
+        String result1 = (nums[0] + number + nums[1] + "=");
         // Массив с римскими числами
         String[] RomanResult = {"O", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
                 "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX", "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
@@ -246,7 +309,7 @@ class CalculatorRom{
                 "LXXI", "LXXII", "LXXIII", "LXXIV", "LXXV", "LXXVI", "LXXVII", "LXXVIII", "LXXIX", "LXXX",
                 "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII", "LXXXVIII", "LXXXIX", "XC",
                 "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"};
-        System.out.print(result1+RomanResult[result]);
+        System.out.print(result1 + RomanResult[result]);
 
         return input;
     }
